@@ -20,6 +20,8 @@ public class AddProductController implements Initializable {
     Stage stage;
     Parent scene;
 
+    private ObservableList<Part> associatedParts = FXCollections.observableArrayList();
+
     @FXML
     private TableColumn<Part, Integer> partIdCol;
 
@@ -49,8 +51,6 @@ public class AddProductController implements Initializable {
 
     @FXML
     private TableView<?> asPartsTableView;
-    @FXML
-    private TextField AddProductMachineIdTxt;
 
     @FXML
     private TextField addProductIdTxt;
@@ -117,6 +117,13 @@ public class AddProductController implements Initializable {
         partInvLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+//        asPartsTableView.setItems(associatedParts);
+//
+//        asPartIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+//        asPartInvLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+//        asPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+//        asPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
     }
 }

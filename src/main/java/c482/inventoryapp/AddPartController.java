@@ -1,5 +1,7 @@
 package c482.inventoryapp;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 
 public class AddPartController {
 
@@ -71,7 +74,14 @@ public class AddPartController {
     @FXML
     void onActionSaveAddedPart(ActionEvent event) throws java.io.IOException {
 
-        int partId = Integer.parseInt(addPartIdTxt.getText());
+        //TODO: fix unique id generator
+
+        ObservableList<Integer> list = FXCollections.observableArrayList();
+        int i;
+        for (i = 0; i < 100; i++) list.add(i);
+        FXCollections.shuffle(list);
+
+        int uniqueId = list.get(i);
         String partName = addPartNameTxt.getText();
         int partInv = Integer.parseInt(addPartInvTxt.getText());
         double partPrice = Double.parseDouble(addPartPriceTxt.getText());
@@ -84,16 +94,16 @@ public class AddPartController {
 
         if (addPartOutsourcedCb.isSelected()) {
             companyName = addPartMachineIdTxt.getText();
-            OutSourced addPart = new OutSourced(partId, partName, partPrice, partInv, partMin, partMax, companyName);
+            OutSourced addPart = new OutSourced(uniqueId, partName, partPrice, partInv, partMin, partMax, companyName);
             Inventory.addPart(addPart);
-    }
+        }
         if (addPartInHouseCb.isSelected()) {
             machineId = Integer.parseInt(addPartMachineIdTxt.getText());
-            InHouse addPart = new InHouse(partId, partName, partPrice, partInv, partMin, partMax, machineId);
+            InHouse addPart = new InHouse(uniqueId, partName, partPrice, partInv, partMin, partMax, machineId);
             Inventory.addPart(addPart);
         }
 
-        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
         stage.setTitle("Main Menu");
         stage.setScene(new Scene(scene));

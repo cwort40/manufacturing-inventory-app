@@ -21,12 +21,24 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         InHouse part1 = new InHouse(1, "wheel", 20.00, 4, 1, 10, 5);
+        InHouse part2 = new InHouse(2, "wheel", 20.00, 4, 1, 10, 5);
+        InHouse part3 = new InHouse(3, "wheel", 20.00, 4, 1, 10, 5);
+        InHouse part4 = new InHouse(4, "wheel", 20.00, 4, 1, 10, 5);
 
         Inventory.addPart(part1);
+        Inventory.addPart(part2);
+        Inventory.addPart(part3);
+        Inventory.addPart(part4);
 
         Product product1 = new Product(1, "car", 5000.00, 1, 0, 2);
+        Product product2 = new Product(2, "car", 5000.00, 1, 0, 2);
+        Product product3 = new Product(3, "car", 5000.00, 1, 0, 2);
+        Product product4 = new Product(4, "car", 5000.00, 1, 0, 2);
 
         Inventory.addProduct(product1);
+        Inventory.addProduct(product2);
+        Inventory.addProduct(product3);
+        Inventory.addProduct(product4);
         //int id, String name, double price, int stock, int min, int max
 
         launch();

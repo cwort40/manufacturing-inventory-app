@@ -49,9 +49,6 @@ public class ModifyProductController implements Initializable {
     private TableView<?> asPartsTableView;
 
     @FXML
-    private TextField ModifyProductMachineIdTxt;
-
-    @FXML
     private TextField modifyProductIdTxt;
 
     @FXML
@@ -118,5 +115,14 @@ public class ModifyProductController implements Initializable {
         partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+    }
+
+    public void sendProduct(Product selectedItem) {
+        modifyProductIdTxt.setText(String.valueOf(selectedItem.getId()));
+        modifyProductNameTxt.setText(selectedItem.getName());
+        modifyProductInvTxt.setText(String.valueOf(selectedItem.getStock()));
+        modifyProductPriceTxt.setText(String.valueOf(selectedItem.getPrice()));
+        modifyProductMaxTxt.setText(String.valueOf(selectedItem.getMax()));
+        modifyProductMinTxt.setText(String.valueOf(selectedItem.getMin()));
     }
 }

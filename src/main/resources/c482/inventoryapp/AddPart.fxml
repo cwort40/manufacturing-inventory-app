@@ -44,7 +44,7 @@
                                         <Insets right="20.0" />
                                     </HBox.margin>
                                 </Label>
-                                <TextField fx:id="addPartIdTxt" />
+                                <TextField fx:id="addPartIdTxt" disable="true" />
                             </children>
                         </HBox>
                         <HBox prefHeight="37.0" prefWidth="600.0">

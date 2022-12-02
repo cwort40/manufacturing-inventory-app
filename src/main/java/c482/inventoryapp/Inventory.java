@@ -27,7 +27,7 @@ public class Inventory {
     }
 
     public static Part LookUpPart(int partId) {
-        for (Part part : getAllParts()) {
+        for (Part part : Inventory.getAllParts()) {
             while (part.getId() == partId) {
                 return part;
             }
@@ -84,7 +84,7 @@ public class Inventory {
         allProducts.set(index, newProduct);
     }
 
-    public static boolean deletePart(Product selectedPart) {
+    public static boolean deletePart(Part selectedPart) {
         allParts.remove(selectedPart);
 
         boolean ans = allParts.contains(selectedPart);

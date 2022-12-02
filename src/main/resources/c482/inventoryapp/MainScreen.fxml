@@ -28,7 +28,7 @@
                                         <Insets left="10.0" />
                                     </HBox.margin>
                                 </Label>
-                                <TextField fx:id="partSearchTxt" alignment="TOP_RIGHT">
+                                <TextField fx:id="partSearchTxt" alignment="TOP_RIGHT" onAction="#mainScreenPartSearch">
                                     <HBox.margin>
                                         <Insets left="325.0" />
                                     </HBox.margin>
@@ -87,7 +87,7 @@
                                         <Insets left="10.0" />
                                     </HBox.margin>
                                 </Label>
-                                <TextField fx:id="productSearchTxt" alignment="TOP_RIGHT">
+                                <TextField fx:id="productSearchTxt" alignment="TOP_RIGHT" onAction="#mainScreenProductSearch">
                                     <HBox.margin>
                                         <Insets left="325.0" />
                                     </HBox.margin>
