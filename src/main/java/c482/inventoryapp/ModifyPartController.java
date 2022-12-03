@@ -58,33 +58,58 @@ public class ModifyPartController {
     @FXML
     void onActionSaveModifiedPart(ActionEvent event) throws java.io.IOException {
 
-        int id = Integer.parseInt(modifyPartIdTxt.getText());
-        String partName = modifyPartNameTxt.getText();
-        int partInv = Integer.parseInt(modifyPartInvTxt.getText());
-        double partPrice = Double.parseDouble(modifyPartPriceTxt.getText());
-        int partMax = Integer.parseInt(modifyPartMaxTxt.getText());
-        int partMin = Integer.parseInt(modifyPartMinTxt.getText());
+        try {
+            int id = Integer.parseInt(modifyPartIdTxt.getText());
+            String partName = modifyPartNameTxt.getText();
+            int partInv = Integer.parseInt(modifyPartInvTxt.getText());
+            double partPrice = Double.parseDouble(modifyPartPriceTxt.getText());
+            int partMax = Integer.parseInt(modifyPartMaxTxt.getText());
+            int partMin = Integer.parseInt(modifyPartMinTxt.getText());
 
-        String companyName;
-        int machineId;
-        
+            if (partMax <= partMin) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Try again");
+                alert.setContentText("Minimum amount cannot be more than maximum amount");
+                alert.showAndWait();
+                return;
+            }
 
-        if (ModifyPartOutsourcedCb.isSelected()) {
-            companyName = modifyPartMachineIdTxt.getText();
-            OutSourced addPart = new OutSourced(id, partName, partPrice, partInv, partMin, partMax, companyName);
-            Inventory.updatePart(partIndex, addPart);
+            if (partInv > partMax || partInv < partMin) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Try again");
+                alert.setContentText("Inventory amount has to be between the minimum and maximum amounts");
+                alert.showAndWait();
+                return;
+            }
+
+            String companyName;
+            int machineId;
+
+
+            if (ModifyPartOutsourcedCb.isSelected()) {
+                companyName = modifyPartMachineIdTxt.getText();
+                OutSourced addPart = new OutSourced(id, partName, partPrice, partInv, partMin, partMax, companyName);
+                Inventory.updatePart(partIndex, addPart);
+            }
+            if (modifyPartInHouseCb.isSelected()) {
+                machineId = Integer.parseInt(modifyPartMachineIdTxt.getText());
+                InHouse addPart = new InHouse(id, partName, partPrice, partInv, partMin, partMax, machineId);
+                Inventory.updatePart(partIndex, addPart);
+            }
+
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            scene = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+            stage.setTitle("Main Menu");
+            stage.setScene(new Scene(scene));
+            stage.show();
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Please ensure all fields have correct values");
+            alert.showAndWait();
         }
-        if (modifyPartInHouseCb.isSelected()) {
-            machineId = Integer.parseInt(modifyPartMachineIdTxt.getText());
-            InHouse addPart = new InHouse(id, partName, partPrice, partInv, partMin, partMax, machineId);
-            Inventory.updatePart(partIndex, addPart);
-        }
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
-        stage.setTitle("Main Menu");
-        stage.setScene(new Scene(scene));
-        stage.show();
 
     }
 
@@ -92,20 +117,26 @@ public class ModifyPartController {
 
         partIndex = index;
 
-        modifyPartIdTxt.setText(String.valueOf(selectedItem.getId()));
-        modifyPartNameTxt.setText(selectedItem.getName());
-        modifyPartInvTxt.setText(String.valueOf(selectedItem.getStock()));
-        modifyPartPriceTxt.setText(String.valueOf(selectedItem.getPrice()));
-        modifyPartMaxTxt.setText(String.valueOf(selectedItem.getMax()));
-        modifyPartMinTxt.setText(String.valueOf(selectedItem.getMin()));
+        if (selectedItem != null) {
+            modifyPartIdTxt.setText(String.valueOf(selectedItem.getId()));
+            modifyPartNameTxt.setText(selectedItem.getName());
+            modifyPartInvTxt.setText(String.valueOf(selectedItem.getStock()));
+            modifyPartPriceTxt.setText(String.valueOf(selectedItem.getPrice()));
+            modifyPartMaxTxt.setText(String.valueOf(selectedItem.getMax()));
+            modifyPartMinTxt.setText(String.valueOf(selectedItem.getMin()));
 
-        if (selectedItem instanceof InHouse) {
-            modifyPartMachineIdTxt.setText(String.valueOf(((InHouse) selectedItem).getMachineId()));
+            if (selectedItem instanceof InHouse) {
+                modifyPartMachineIdTxt.setText(String.valueOf(((InHouse) selectedItem).getMachineId()));
+            }
+
+            if (selectedItem instanceof OutSourced) {
+                modifyPartMachineIdTxt.setText(String.valueOf(((OutSourced) selectedItem).getCompanyName()));
+            }
+        } else {
+            Alert noPart = new Alert(Alert.AlertType.WARNING);
+            noPart.setHeaderText("Warning");
+            noPart.setContentText("No part was selected.");
+            noPart.showAndWait();
         }
-
-        if (selectedItem instanceof OutSourced) {
-            modifyPartMachineIdTxt.setText(String.valueOf(((OutSourced) selectedItem).getCompanyName()));
-        }
-
     }
 }

@@ -1,5 +1,6 @@
 package c482.inventoryapp;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -112,7 +113,7 @@ public class MainController implements Initializable {
             noSelection.setTitle("Warning");
             noSelection.setHeaderText("Please select a product to delete");
             noSelection.showAndWait();
-        } else if (!(productsTableView.getSelectionModel().isEmpty())) {
+        } else if (!(productsTableView.getSelectionModel().isEmpty()) && selectedProduct.getAllAssociatedParts().isEmpty()) {
             Alert confirmDel = new Alert(Alert.AlertType.CONFIRMATION);
             confirmDel.setTitle("Confirmation");
             confirmDel.setHeaderText("Delete " + selectedProduct.getName() + "?");
@@ -126,6 +127,12 @@ public class MainController implements Initializable {
                 }
             }
 
+        } else {
+            Alert confirmDel = new Alert(Alert.AlertType.WARNING);
+            confirmDel.setTitle("WARNING");
+            confirmDel.setHeaderText("Cannot delete " + selectedProduct.getName());
+            confirmDel.setContentText("Please remove any associated parts from this product before deleting");
+            confirmDel.showAndWait();
         }
     }
 
@@ -146,12 +153,13 @@ public class MainController implements Initializable {
         ModifyPartController MPartController = loader.getController();
         MPartController.sendPart(partsTableView.getSelectionModel().getSelectedIndex(), partsTableView.getSelectionModel().getSelectedItem());
 
-        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-        Parent scene = loader.getRoot();
-        stage.setTitle("Modify Part");
-        stage.setScene(new Scene(scene));
-        stage.show();
-
+        if (!(partsTableView.getSelectionModel().getSelectedItem() == null)) {
+            stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setTitle("Modify Part");
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
     }
 
     @FXML
@@ -162,59 +170,90 @@ public class MainController implements Initializable {
         loader.load();
 
         ModifyProductController MProductController = loader.getController();
-        MProductController.sendProduct(productsTableView.getSelectionModel().getSelectedItem());
+        MProductController.sendProduct(productsTableView.getSelectionModel().getSelectedIndex(), productsTableView.getSelectionModel().getSelectedItem());
 
-        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-        Parent scene = loader.getRoot();
-        stage.setTitle("Modify Product");
-        stage.setScene(new Scene(scene));
-        stage.show();
-
-    }
-
-    @FXML
-    void mainScreenPartSearch(ActionEvent event) {
-        String searchTxt = partSearchTxt.getText();
-        ObservableList<Part> results = Inventory.LookUpPart(searchTxt);
-        try {
-            while (results.size() == 0 ) {
-                int partId = Integer.parseInt(searchTxt);
-                results.add(Inventory.LookUpPart(partId));
-            }
-            if (results.size() == 1) {
-                partsTableView.getSelectionModel().select(selectPart(results.get(0).getId()));
-            } else if (results.size() > 1)
-            partsTableView.setItems(results);
-        } catch (NumberFormatException e) {
-            Alert noParts = new Alert(Alert.AlertType.ERROR);
-            noParts.setTitle("Error Message");
-            noParts.setContentText("Part was not found");
-            noParts.showAndWait();
+        if (!(productsTableView.getSelectionModel().getSelectedItem() == null)) {
+            stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setTitle("Modify Product");
+            stage.setScene(new Scene(scene));
+            stage.show();
         }
     }
 
+
+    //TODO: fix bug (for all 4 search methods) when search bar is set to empty after an item is highlighted, the item still remains highlighted
+    @FXML
+    void mainScreenPartSearch(ActionEvent event) {
+        //public synchronized
+//        String searchTxt = partSearchTxt.getText();
+//        ObservableList<Part> parts = Inventory.LookUpPart(searchTxt);
+//
+//        boolean valueType = searchTxt.matches("[0-9]+");
+//        if (valueType) {
+//            int partId = Integer.parseInt(searchTxt);
+//            partsTableView.getSelectionModel().select(selectPart(partId));
+//        } else {
+//            if (parts.size() > 1) {
+//                partsTableView.setItems(parts);
+//            } else {
+//                partsTableView.getSelectionModel().select(selectPart(parts.get(0).getId()));
+//            }
+//        }
+
+
+        String searchText = partSearchTxt.getText();
+        ObservableList<Part> results = Inventory.LookUpPart(searchText);
+
+        String cleanedText = searchText.strip();
+        boolean valueType = cleanedText.matches("[0-9]+");
+
+        while (results.size() == 0 && valueType) {
+            int partID = Integer.parseInt(cleanedText);
+            results.add(Inventory.LookUpPart(partID));
+        }
+        while (results.size() > 1) 
+        partsTableView.setItems(results);
+    }
+
+
+
+
     @FXML
     void mainScreenProductSearch(ActionEvent event) {
-//        String searchTxt = productSearchTxt.getText();
-//        ObservableList<Product> results = Inventory.LookUpProduct(searchTxt);
-//        try {
-//            while (results.size() == 0 ) {
-//                int partId = Integer.parseInt(searchTxt);
-//                results.add(Inventory.LookUpProduct(partId));
-//            }
-//            productsTableView.setItems(results);
-//        } catch (NumberFormatException e) {
-//            Alert noParts = new Alert(Alert.AlertType.ERROR);
-//            noParts.setTitle("Error Message");
-//            noParts.setContentText("Part was not found");
-//            noParts.showAndWait();
-//        }
+        String searchTxt = productSearchTxt.getText();
+        ObservableList<Product> products = Inventory.LookUpProduct(searchTxt);
+
+        boolean valueType = searchTxt.matches("[0-9]+");
+        if (valueType) {
+            int productId = Integer.parseInt(searchTxt);
+            productsTableView.getSelectionModel().select(selectProduct(productId));
+        } else {
+            if (products.isEmpty()) {
+                Alert noParts = new Alert(Alert.AlertType.WARNING);
+                noParts.setTitle("Warning");
+                noParts.setContentText("No product was found by that name.");
+                noParts.showAndWait();
+            } else if (products.size() > 1) {
+                productsTableView.setItems(products);
+            } else {
+                productsTableView.getSelectionModel().select(selectProduct(products.get(0).getId()));
+            }
+        }
     }
 
     public Part selectPart(int id) {
         for (Part part : Inventory.getAllParts()) {
             if (part.getId() == id)
                 return part;
+        }
+        return null;
+    }
+
+    public Product selectProduct(int id) {
+        for (Product product : Inventory.getAllProducts()) {
+            if (product.getId() == id)
+                return product;
         }
         return null;
     }
@@ -236,8 +275,6 @@ public class MainController implements Initializable {
         productInvLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         productPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-
 
 
     }

@@ -33,10 +33,10 @@ public class Inventory {
             }
         }
 
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Part was not found");
-        alert.show();
+        Alert noParts = new Alert(Alert.AlertType.WARNING);
+        noParts.setTitle("Warning");
+        noParts.setContentText(String.format("No part was found by the following %s.", partId));
+        noParts.showAndWait();
         return null;
     }
 
