@@ -7,8 +7,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/** This program creates an inventory tracking app */
+/** This program creates an inventory tracking app <br>
+ * FUTURE ENHANCEMENT: I would create a database for this program to store part/product information for offline storage
+ * of data. This enhancement would be added using a database with MySQL or a similar tool. The advantage of data
+ * being stored offline would be helpful to the user since they would not have to re-enter information every time
+ * that they wanted to use the program.*/
 public class Main extends Application {
+    /**
+     * Loads main menu
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("MainScreen.fxml"));
@@ -18,29 +27,10 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-
-//        InHouse part1 = new InHouse(1, "wheel", 20.00, 4, 1, 10, 5);
-//        InHouse part2 = new InHouse(2, "wheel", 20.00, 4, 1, 10, 5);
-//        InHouse part3 = new InHouse(3, "wheel", 20.00, 4, 1, 10, 5);
-//        InHouse part4 = new InHouse(4, "wheel", 20.00, 4, 1, 10, 5);
-//
-//        Inventory.addPart(part1);
-//        Inventory.addPart(part2);
-//        Inventory.addPart(part3);
-//        Inventory.addPart(part4);
-//
-//        Product product1 = new Product(1, "car", 5000.00, 1, 0, 2);
-//        Product product2 = new Product(2, "car", 5000.00, 1, 0, 2);
-//        Product product3 = new Product(3, "car", 5000.00, 1, 0, 2);
-//        Product product4 = new Product(4, "car", 5000.00, 1, 0, 2);
-//
-//        Inventory.addProduct(product1);
-//        Inventory.addProduct(product2);
-//        Inventory.addProduct(product3);
-//        Inventory.addProduct(product4);
-
-
-        launch();
-    }
+    /**
+     * JAVADOCS IS STORED IN A SEPARATE FOLDER CALLED "JAVADOCS" IN ~/InventoryApp/javadoc <br>
+     * Starts program
+     * @param args
+     */
+    public static void main(String[] args) { launch(); }
 }
