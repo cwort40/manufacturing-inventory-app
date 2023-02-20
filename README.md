@@ -34,7 +34,3 @@ In future updates, additional functionality could be added to the application to
 - Exporting data to a CSV or other format
 - Support for multiple users with different access levels
 - Customizable UI themes and layouts
-
-## Contributors
-
-This application was developed by [Your Name Here].
